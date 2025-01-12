@@ -1,43 +1,45 @@
-const bloodCompatibility = {
-    'O-': ['O-'],
-    'O+': ['O-', 'O+'],
-    'B-': ['O-', 'B-'],
-    'B+': ['O-', 'O+', 'B-', 'B+'],
-    'A-': ['O-', 'A-'],
-    'A+': ['O-', 'O+', 'A-', 'A+'],
-    'AB-': ['O-', 'B-', 'A-', 'AB-'],
-    'AB+': ['O-', 'O+', 'B-', 'B+', 'A-', 'A+', 'AB-', 'AB+']
-};
-document.getElementById('bloodForm').onsubmit = function () {
-    const name = document.getElementById('name').value.trim();
-    const fatherName = document.getElementById('fatherName').value.trim();
-    const dob = document.getElementById('dob').value;
-    const age = parseInt(document.getElementById('age').value);
-    const bloodGroup = document.getElementById('bloodGroup').value;
-
-    if (name.length === 0 || fatherName.length === 0 || dob.length === 0 || isNaN(age) || bloodGroup.length === 0) {
-        alert('Please fill out all fields correctly.');
-        return false;
+function bloodGroupChecker() {
+    const userGroup = document.getElementById("bloodGroup").value;
+    let donateBloodEl = document.getElementById("bloodDonate");
+    let receiveBloodEl = document.getElementById("bloodReceive");
+    donateBloodEl.innerHTML = "";
+    receiveBloodEl.innerHTML = "";
+    let donateBloodGroups;
+    let receiveBloodGroups;
+    if (userGroup == "O+") {
+        donateBloodGroups = ["O+", "AB+", "A+", "B+"];
+        receiveBloodGroups = ["O-", "O+"];
+    } else if (userGroup == "O-") {
+        donateBloodGroups = ["AB+", "AB-", "A+", "A-", "B+", "B-", "O+", "O-"];
+        receiveBloodGroups = ["O-"];
+    } else if (userGroup == "A+") {
+        donateBloodGroups = ["AB+", "A+"];
+        receiveBloodGroups = ["O-", "O+", "A+", "A-"];
+    } else if (userGroup == "A-") {
+        donateBloodGroups = ["AB+", "AB-", "A+", "A-"];
+        receiveBloodGroups = ["A-", "O-"];
+    } else if (userGroup == "B+") {
+        donateBloodGroups = ["B+", "AB+"];
+        receiveBloodGroups = ["O-", "O+", "AB+", "AB-"];
+    } else if (userGroup == "B-") {
+        donateBloodGroups = ["AB+", "AB-", "B+", "B-"];
+        receiveBloodGroups = ["O-", "B-"];
+    } else if (userGroup == "AB+") {
+        donateBloodGroups = ["AB+"];
+        receiveBloodGroups = ["AB+", "AB-", "O+", "O-", "A+", "A-", "B+", "B-"];
+    } else if (userGroup == "AB-") {
+        donateBloodGroups = ["AB+", "AB-"];
+        receiveBloodGroups = ["O-", "A-", "B-", "AB-"];
+    } else {
+        alert("Please Select your blood group");
+        return;
     }
-    if (bloodCompatibility[bloodGroup] === undefined) {
-        alert('Invalid blood group selected.');
-        return false;
+    for (let i = 0; i < donateBloodGroups.length; i++) {
+        // console.log("run");
+        donateBloodEl.innerHTML += `<li class="flex-auto bg-blue-600  font-bold text-center rounded-sm px-1">${donateBloodGroups[i]}</li>`
     }
-
-    const compatibleDonors = bloodCompatibility[bloodGroup];
-    const resultDiv = document.getElementById('result');
-    const userDetailsDiv = document.getElementById('userDetails');
-    const donorListDiv = document.getElementById('donorList');
-    userDetailsDiv.innerHTML = `
-        Name: ${name}<br>
-        Father's Name: ${fatherName}<br>
-        Date of Birth: ${new Date(dob).toLocaleDateString()}<br>
-        Age: ${age}<br>
-        Blood Group: ${bloodGroup}<br>
-    `;
-
-    donorListDiv.innerHTML = compatibleDonors.map(donor => donor).join(', ');
-
-    resultDiv.style.display = 'block';
-    return false;
-};
+    for (let i = 0; i < receiveBloodGroups.length; i++) {
+        // console.log("run");
+        receiveBloodEl.innerHTML += `<li class="flex-auto bg-blue-600 font-bold text-center rounded-sm px-1">${receiveBloodGroups[i]}</li>`
+    }
+}
